@@ -7,7 +7,8 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class ProyService {
   //private apiUrl = 'http://192.168.10.31:3001/proyectos/api/';
-  private apiUrl = 'http://localhost:3001/proyectos/api/';
+  private url ='https://servidorot.herokuapp.com/';
+  //private apiUrl = 'http://localhost:3001/proyectos/api/';
   //private apiUrl = 'http://192.168.43.127:3001/api/';
   showAddTodoBox:boolean = true;
 
