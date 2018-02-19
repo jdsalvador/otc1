@@ -41,7 +41,8 @@ export class TodoListComponent implements OnInit{
   saludo:any = {};
    ordenesactuales:any[] = [];
      numbers =[0];
-  private url = 'http://localhost:3001';
+  private url ='https://servidorot.herokuapp.com/';
+  //private url = 'http://localhost:3001';
   //private url = 'http://192.168.10.31:3001';
   //private socket;
   private socket;
