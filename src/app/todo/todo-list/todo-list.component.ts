@@ -17,12 +17,12 @@ import {FormControl, FormGroup, FormArray } from '@angular/forms';
 @Injectable()
 export class TodoListComponent implements OnInit{
     d = new Date(); 
-   public myDatePickerOptions: IMyDpOptions = {
+ //  public myDatePickerOptions: IMyDpOptions = {
         // other options...
-        dateFormat: 'dd.mm.yyyy',
-        disableWeekends:true,
-        disableUntil: {year: this.d.getUTCFullYear(), month: this.d.getUTCMonth() + 1, day: this.d.getUTCDate()},
-    };
+  //      dateFormat: 'dd.mm.yyyy',
+   //     disableWeekends:true,
+    //    disableUntil: {year: this.d.getUTCFullYear(), month: this.d.getUTCMonth() + 1, day: this.d.getUTCDate()},
+   // };
  @Input()  muestrainiciados:boolean;
    @Input()  muestraasunto:boolean;
    @Input()  muestrafecha:boolean;
