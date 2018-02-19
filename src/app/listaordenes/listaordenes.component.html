@@ -1,0 +1,19 @@
+<!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+<app-navegador [listapantalla]="true" [listaing]="false" [listaproyec]="false" [listaadminproyec]="false"></app-navegador>
+<div class="container">
+	    <div class="row">
+        	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+               <h1 align="center">ORDENES DE TRABAJO</h1>
+            </div>
+
+           </div>
+        <div class="row">
+            <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col11 mat-app-background basic-container"> -->
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col11">
+               <app-todo-list  [muestrainiciados]="true" [muestraasunto]="true" [muestrafecha]="true" [muestraedita]="false" [muestraasigna]="false" [muestrabotonasigna]="false"></app-todo-list>
+            </div>
+   <!--          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col12">
+                <app-ot-edita [ordentrabajo]="todo" [muestraedita]="true"></app-ot-edita>
+            </div> -->
+        </div>
+</div>

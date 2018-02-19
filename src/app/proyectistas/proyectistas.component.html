@@ -1,0 +1,94 @@
+<app-navegador [listapantalla]="true" [listaing]="false" [listaproyec]="true" [listaadminproyec]="false"></app-navegador>
+<div class="contenedorprinc">
+<h2 class="encabezado">Seccion Proyectistas</h2>
+
+<div *ngFor="let user of  integrantes; index as i; first as isFirst">
+  <div *ngIf="(user.cargo == 'Proyectista')">
+  <h2>{{user.clave}}</h2>
+  <button class="btn btn-primary btn-xs" (click) = "muestraUsuario(user)" data-title="Edit" data-toggle="modal" data-target="#ordenesproyectistas" ><span class="glyphicon glyphicon-pencil"></span>VER ORDENES ASIGNADAS</button>
+</div>
+</div>
+
+
+<!-- <div *ngFor="let user of  integrantes; index as i; first as isFirst">
+	<div *ngIf="(user.cargo == 'Proyectista')">
+	<h2>{{user.clave}}</h2>
+	<div *ngFor="let orden of  ordenes; index as i; first as isFirst">
+   <li *ngIf="(user.cargo == 'Proyectista' && orden.proyectista == user.clave)">{{i}}/{{integrantes.length}}. {{user.clave}} {{orden.proyecto}} {{orden.estado}} <span *ngIf="isFirst">default</span>
+   		<p data-placement="top" data-toggle="tooltip" title="Editar"><button class="btn btn-primary btn-xs" (click) = "showEditTodo(orden)" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p>
+   	</li>
+
+   		</div>
+</div>
+</div> -->
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="ordenesproyectistas" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Proyectista {{userToEdit.clave}}</h4>
+        </div>
+        <div class="modal-body">
+  <div *ngFor="let user of  integrantes; index as i; first as isFirst">
+  <div *ngIf="(user.clave == userToEdit.clave)">
+  <h2>Ordenes asignadas</h2>
+  <div *ngFor="let orden of  ordenes; index as i; first as isFirst">
+     <div *ngFor="let elem of  orden.listaproyectista; index as k; first as isFirst">
+   <ul *ngIf="(user.cargo == 'Proyectista' &&  elem==user.clave  )">
+    <li>{{user.clave}} {{orden.proyecto}} </li>
+    <li> <p data-placement="top" data-toggle="tooltip" title="Editar"><button class="btn btn-primary btn-xs" (click) = "showEditTodo(orden,user.clave)" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil">{{orden.estado}}</span></button></p>
+    </li>
+    </ul>
+ </div>
+      </div>
+</div>
+</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="edit" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Editar Estado Orden {{userToEdit.clave}}</h4>
+        </div>
+        <div class="modal-body">
+          <div align="center" class="EditTodoBox">
+            <form (ngSubmit)="EditTodo(todoToEdit)" #editTodoForm="ngForm">
+            <div class="form-group">
+       
+                 <label for="otProyectista">Estado</label>
+            <select class="form-control" [(ngModel)]="todoToEdit.estado"  name="otProyectista">
+            <!--   <select class="form-control" name="otProyectista"> -->
+              <option *ngFor="let p of estadoorden" [value]="p">{{p}}</option>
+            </select>
+            </div>
+         
+
+            <button type="submit" [disabled]="!editTodoForm.form.valid || !editTodoForm.form.dirty" class="btn btn-success btn-block">Listo</button>
+          </form>
+          <div style="margin:10px;" *ngIf="apiMessage" align="center" class="alert alert-success" role="alert">
+          <strong>{{apiMessage}}</strong>
+          </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

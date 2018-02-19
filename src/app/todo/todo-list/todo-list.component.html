@@ -1,0 +1,451 @@
+
+
+<div id="divagrega" *ngIf="muestrabotonasigna==true">
+      <!--   <a id="agregaorden" (click)="showAddTodoBox($event)" href="/ordenestrabajos/#" >Agregar Orden</a> -->
+         <button type="button"  class="btn btn-primary1" data-toggle="modal" data-target="#creaorden" aria-pressed="false" data-backdrop="static" data-keyboard="false" autocomplete="off"(click)="todoService.showAddTodoBox">
+      <!--       <span id="spanmuestra" *ngIf="!selected">Agregar Orden</span>
+            <span id="spancierra" *ngIf="selected">Cerrar</span> -->
+            Agrega Orden
+        </button>
+     </div>
+
+<div align="center" class="AddTodoBox" [hidden]="todoService.showAddTodoBox">
+  <h4>Add New Todo</h4>
+  <form (ngSubmit)="AddTodo(todo);todoForm.reset()" #todoForm="ngForm">
+  <div class="form-group">
+    <label for="todoText">Todo:</label>
+    <input type="text" [(ngModel)]="todo.proyecto" #todotext="ngModel" class="form-control" name="todoText" id="todoText" required />
+    <div [hidden]="todotext.valid || todotext.pristine"
+         class="alert alert-danger">
+      Todo is required
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="todoDesc">Description:</label>
+    <textarea class="form-control" [(ngModel)]="todo.referencia" #tododesc="ngModel" name="todoDesc" id="todoDesc" required></textarea>
+    <div [hidden]="tododesc.valid || tododesc.pristine"
+         class="alert alert-danger">
+      Description is required
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="!todoForm.form.valid" class="btn btn-success btn-block">Submit</button>
+</form>
+</div>
+<br>
+<br>
+<br>
+
+
+<div *ngIf="muestrainiciados==true"  class="contenedorint" id="cont1">
+
+
+
+
+<div  class="col listaordenes" *ngFor="let todo of ordenesactuales; let i=index"  >
+
+    <a     [routerLink]="['/ordenestrabajos', todo._id]"><h2> {{todo.num}}</h2>
+     <h3>{{todo.categoria}}</h3><p>{{todo.proyecto}}</p>
+    </a>
+ 
+   <!--  <div class="col  listaordenes"  *ngIf='todo.estado == "Iniciada"'  > -->
+
+
+<!--   </div> -->
+
+
+
+
+
+
+</div><!-- Fin lista ordenes -->
+
+</div>
+
+
+<div *ngIf="todos.length > 0" class="TodoListBox">
+  <table id="mytable" class="table table-bordred table-striped ">
+
+                    <thead class="thead">
+                    <th id="th1"> <input type="number" name="id" [(ngModel)]="filter.num" min="3500" placeholder="N Orden"></th>
+                    <th id="th2"><input type="string" name="id" [(ngModel)]="filter.proyecto"  placeholder="Proyecto"></th>
+                  <th id="th3">Estado<th>
+        <!--         <th id="th4">Proyectista<th>  -->
+          <th id="th5">Solicita</th>
+           <th id="th6" *ngIf="muestraasunto==true">Asunto</th>
+           <th id="th6" *ngIf="muestrafecha==true">Fecha Plazo</th>
+                         <th *ngIf="muestraedita==true">Editar</th>
+              <th *ngIf="muestraedita==true">Borrar</th>
+              <!--                 <th *ngIf="muestraasigna==true">Asignar</th> -->
+                    </thead>
+     <tbody>
+
+     <tr *ngFor="let todo of todos | bookfilter:filter">
+      <td><a  [routerLink]="['/ordenestrabajos', todo._id]" title="Click para ver">{{todo.num}}</a></td>
+     <td>{{todo.proyecto}}</td>
+     <td>{{todo.listaestadoalter}}</td>
+     <td>{{todo.listaproyectista}}</td>
+      <td>{{todo.ingeniero}}</td>
+       <td *ngIf="muestraasunto==true">{{todo.asunto}}</td>
+       <td *ngIf="muestrafecha==true">{{todo.fechaplazo | date }}</td>
+        <td class="tdedita" *ngIf="muestraedita==true"><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" (click) = "showEditTodo(todo)" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
+     <td class="tdedita" *ngIf="muestraedita==true"><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs" (click) = "showDeleteTodo(todo)" data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
+        <td class="tdedita" *ngIf="muestraasigna==true"><p data-placement="top" data-toggle="tooltip" title="Asignar"><button class="btn btn-danger btn-xs" (click) = "showAsignaTodo(todo)" data-title="Asigna" data-toggle="modal" data-target="#asigna" ><span class="glyphicon glyphicon-hand-up"></span></button></p></td>
+          </tr>
+
+  </tbody>
+  </table>
+
+</div>
+
+
+<div *ngIf="todos.length <= 0" class="NoTodosBox">
+<div align="center" class="alert alert-info" role="alert">
+<strong>No hay ordenes de trabajo en la base de datos</strong>
+</div>
+</div>
+
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="edit" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Editar Orden N° {{todoToEdit.num}}</h4>
+        </div>
+        <div class="modal-body">
+          <div align="center" class="EditTodoBox">
+            <form (ngSubmit)="EditTodo(todoToEdit)" #editTodoForm="ngForm">
+           
+    <div class="form-group">
+          <label for="proyform" class="center-block">Proyecto:</label>
+            <select class="form-control" name="proyform" [(ngModel)]="todoToEdit.proyecto">
+              <option *ngFor="let p of proyecs" [value]="p.num +' '+p.nombre">{{p.num}} {{p.nombre}}</option>
+            </select>
+      
+        </div>
+
+
+  
+
+
+  <div class="form-group">
+    <label for="otAsunto">Asunto:</label>
+        <select #otasunto="ngModel" class="form-control" name="otAsunto" [(ngModel)]="todoToEdit.asunto">
+              <option *ngFor="let p of asuntos" [value]="p">{{p}}</option>
+            </select>
+    <div [hidden]="otasunto.valid || otasunto.pristine"
+         class="alert alert-danger">
+      Asunto es requerido
+    </div>
+  </div>
+
+    <div class="form-group">
+    <label for="otMotivo">Motivo:</label>
+        <select #otmotivo="ngModel" class="form-control" name="otMotivo" [(ngModel)]="todoToEdit.motivo">
+              <option *ngFor="let p of motivos" [value]="p">{{p}}</option>
+            </select>
+    <div [hidden]="otmotivo.valid || otmotivo.pristine"
+         class="alert alert-danger">
+      Motivo es requerido
+    </div>
+  </div>
+   <div class="form-group">
+          <label for="otSolicita">Solicita:</label>
+            <select class="form-control" name="otSolicita">
+              <option *ngFor="let p of ingenieros" [value]="p">{{p}}</option>
+            </select>
+      
+    </div>
+
+    <div class="form-group">
+          <label for="otCategoria">Categoria:</label>
+            <select class="form-control" name="otCategoria" [(ngModel)]="todoToEdit.categoria">
+              <option *ngFor="let p of categorias" [value]="p">{{p}}</option>
+            </select>
+      
+    </div>
+
+
+
+ <div class="form-group">
+ <label for="mydate">Fecha Plazo:</label>
+ <my-date-picker name="mydate" [options]="myDatePickerOptions"
+                    [(ngModel)]="todoToEdit.fechaplazo" required></my-date-picker>
+                      </div>
+
+ <div class="form-group">
+    <label for="otReferencia">Referencia:</label>
+     <input type="text" [(ngModel)]="todoToEdit.referencia" #otreferencia="ngModel" class="form-control" name="otReferencia" id="otReferencia" placeholder ="Escriba referencia" required />
+    <div [hidden]="otreferencia.valid || otreferencia.pristine"
+         class="alert alert-danger">
+      Referencia es requerida
+    </div>
+  </div>
+
+
+            <button type="submit" [disabled]="!editTodoForm.form.valid || !editTodoForm.form.dirty" class="btn btn-success btn-block">Listo</button>
+          </form>
+          <div style="margin:10px;" *ngIf="apiMessage" align="center" class="alert alert-success" role="alert">
+          <strong>{{apiMessage}}</strong>
+          </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal fade" id="delete" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Borrar orden de trabajo N° {{todoToDelete.num}}</h4>
+        </div>
+        <div class="modal-body">
+          <div align="center" class="DeleteTodoBox">
+            <div *ngIf="!apiMessage" align="center" class="alert alert-danger" role="alert">
+              <p>¿Seguro que quiere borrar esta orden de trabajo?</p>
+            <strong>{{todoToDelete.todoText}}</strong>
+            </div>
+          <div style="margin:10px;" *ngIf="apiMessage" align="center" class="alert alert-success" role="alert">
+          <strong>{{todoToDelete.todoText}}</strong>  {{apiMessage}}
+          </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" *ngIf="!apiMessage" (click)="DeleteTodo(todoToDelete)">Confirmar</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+    <!-- Asigna Modal -->
+   <div class="modal fade" id="asigna" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Asigna Orden</h4>
+        </div>
+        <div class="modal-body">
+<h3> Asigna Proyectistas a la orden </h3>
+<div> 
+
+   <form  (ngSubmit)="AsignaTodo(todoToAsigna)">
+        <div class="form-group">
+            <label for="name">Asigna proyectistas</label>
+            <angular2-multiselect [data]="proyectistas" [(ngModel)]="todoToAsigna.proyectista" 
+                                  [settings]="settings" 
+                                  (onSelect)="onItemSelect($event)"
+                                  (onDeSelect)="OnItemDeSelect($event)" 
+                                  (onSelectAll)="onSelectAll($event)" 
+                                  (onDeSelectAll)="onDeSelectAll($event)" name="skills" #skills="ngModel" required>
+            </angular2-multiselect>
+ <!--            <div [hidden]="skills.valid" class="alert alert-danger">
+                <div [hidden]="!skills.hasError('required')">Atleast one Skill is required</div>
+            </div> -->
+        </div>
+ <button type="submit" class="btn btn-success btn-block">Listo</button>
+      
+    </form>
+
+
+<!--     <form [formGroup]="userForm" (ngSubmit)="onFormSubmit(todoToAsigna)"> -->
+     <!--  <form [formGroup]="userForm" (ngSubmit)="AsignaTodo(todoToAsigna)" #asignaTodoForm="ngForm"> -->
+    <!--   <div formArrayName="users">
+        <div class="seccionform" *ngFor="let user of users.controls; index as idx"> -->
+        <!--   <input [formControlName]="idx" placeholder="Enter User Name"> -->
+<!--               <select [formControlName]="idx" class="form-control form-asigna"  name="otProyectista">
+              <option *ngFor="let p of proyectistas" [value]="p">{{p}}</option>
+            </select>
+
+          <button class="btn btn-warning" (click)="deleteUserField(idx)">-</button>
+        </div>
+      </div>
+<button type="button" class="btn btn-warning" (click)="addUserField()">+</button>
+       <button type="submit" class="btn btn-success btn-block">Listo</button>
+      
+    </form> -->
+              <div style="margin:10px;" *ngIf="apiMessage" align="center" class="alert alert-success" role="alert">
+          <strong>{{apiMessage}}</strong>
+          
+          </div>
+</div> 
+
+
+
+
+
+
+
+
+
+<!-- 
+          <div align="center" class="AsignaTodoBox">
+            <form (ngSubmit)="AsignaTodo(todoToAsigna)" #asignaTodoForm="ngForm">
+          <div class="form-group">
+          <label for="otProyectista">Proyectista:</label>
+            <select class="form-control" [(ngModel)]="todoToAsigna.proyectista"  name="otProyectista">
+              <option *ngFor="let p of proyectistas" [value]="p">{{p}}</option>
+            </select>
+     
+  </div>
+          
+           <button type="submit" class="btn btn-success btn-block">Listo</button>
+          </form>
+          <div style="margin:10px;" *ngIf="apiMessage" align="center" class="alert alert-success" role="alert">
+          <strong>{{apiMessage}}</strong>
+          
+          </div>
+          </div>
+ -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" *ngIf="!apiMessage" (click)="AsignaTodo(todoToDelete)">Confirmar</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- Modal Crea orden Modal -->
+  <div class="modal fade" id="creaorden" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" (click)="todoService.showAddTodoBox">&times;</button>
+          <h4 class="modal-title">Crea Orden de trabajo</h4>
+        </div>
+        <div class="modal-body">
+<!--    <div id="divnuevaorden" align="center" class="AddTodoBox" [hidden]="todoService.showAddTodoBox"> -->
+     <div id="divnuevaorden" align="center" class="AddTodoBox">
+  <!-- <div align="center" class="AddTodoBox" > -->
+  <h4>Nueva Orden</h4>
+<!--   <form (ngSubmit)="AddTodo(todo);todoForm.reset();showAddTodoBox($event)" #todoForm="ngForm"> -->
+<form (ngSubmit)="AddTodo(todo);todoForm.reset()" #todoForm="ngForm">
+    
+    <div class="form-group">
+          <label for="proyform" class="center-block">Proyecto:</label>
+            <select #otproyecto="ngModel" class="form-control" name="proyform" [(ngModel)]="todo.proyecto">
+              <option *ngFor="let p of proyecs" [value]="p.num +' '+p.nombre">{{p.num}} {{p.nombre}}</option>
+            </select>
+          <div [hidden]="otproyecto.valid || otproyecto.pristine"
+         class="alert alert-danger">
+      Proyecto es requerido
+    </div>
+        </div>
+
+
+  
+
+
+  <div class="form-group">
+    <label for="otAsunto">Asunto:</label>
+        <select #otasunto="ngModel" class="form-control" name="otAsunto" [(ngModel)]="todo.asunto">
+              <option *ngFor="let p of asuntos" [value]="p">{{p}}</option>
+            </select>
+    <div [hidden]="otasunto.valid || otasunto.pristine"
+         class="alert alert-danger">
+      Asunto es requerido
+    </div>
+  </div>
+
+    <div class="form-group">
+    <label for="otMotivo">Motivo:</label>
+        <select #otmotivo="ngModel" class="form-control" name="otMotivo" [(ngModel)]="todo.motivo">
+              <option *ngFor="let p of motivos" [value]="p">{{p}}</option>
+            </select>
+    <div [hidden]="otmotivo.valid || otmotivo.pristine"
+         class="alert alert-danger">
+      Motivo es requerido
+    </div>
+  </div>
+
+
+
+<!--   <div class="form-group">
+    <label for="otMotivo">Motivo:</label>
+    <input type="text" [(ngModel)]="todo.motivo" #otmotivo="ngModel" class="form-control" name="otMotivo" id="otMotivo" required />
+    <div [hidden]="otmotivo.valid || otmotivo.pristine"
+         class="alert alert-danger">
+      Motivo es requerido
+    </div>
+  </div>
+ -->
+   <div class="form-group">
+          <label for="otSolicita">Solicita:</label>
+           <select #otsolicita="ngModel" class="form-control" name="otSolicita" [(ngModel)]="todo.ingeniero">
+              <option *ngFor="let p of ingenieros" [value]="p">{{p}}</option>
+            </select>
+        <div [hidden]="otsolicita.valid || otsolicita.pristine"
+         class="alert alert-danger">
+      Solicitante es requerido
+    </div>
+    </div>
+
+    <div class="form-group">
+          <label for="otCategoria">Categoria:</label>
+            <select #otcategoria="ngModel" class="form-control" name="otCategoria" [(ngModel)]="todo.categoria">
+              <option *ngFor="let p of categorias" [value]="p">{{p}}</option>
+            </select>
+            <div [hidden]="otcategoria.valid || otcategoria.pristine"
+         class="alert alert-danger">
+      Solicitante es requerido
+    </div>
+      
+    </div>
+
+
+
+<!--  <div class="form-group">
+    <label for="otFechaplazo">Fecha Plazo:</label>
+    <input type="date" [(ngModel)]="todo.fechaplazo" #otfechaplazo="ngModel" class="form-control" name="otFechaplazo" id="otFechaplazo" [min]="today" required />
+    <div [hidden]="otfechaplazo.valid || otfechaplazo.pristine"
+         class="alert alert-danger">
+      Fecha de ingreso
+    </div>
+  </div> -->
+
+  
+ <div class="form-group">
+ <label for="mydate">Fecha Plazo:</label>
+ <my-date-picker name="mydate" [options]="myDatePickerOptions"
+                    [(ngModel)]="todo.fechaplazo" required></my-date-picker>
+                      </div>
+
+ <div class="form-group">
+    <label for="otReferencia">Referencia:</label>
+     <input type="text" [(ngModel)]="todo.referencia" #otreferencia="ngModel" class="form-control" name="otReferencia" id="otReferencia" placeholder ="Escriba referencia" required />
+    <div [hidden]="otreferencia.valid || otreferencia.pristine"
+         class="alert alert-danger">
+      Referencia es requerida
+    </div>
+  </div>
+   
+
+  <button type="submit" [disabled]="!todoForm.form.valid"   class="btn btn-success btn-block" data-toggle="modal" data-target="#ordenlista">Listo</button>
+</form>
+       <div style="margin:10px;" *ngIf="apiMessage" align="center" class="alert alert-success" role="alert">
+          <strong>{{apiMessage}}</strong>
+          </div>
+</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" (click)="todoService.showAddTodoBox">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+

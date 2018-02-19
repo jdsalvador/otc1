@@ -1,0 +1,23 @@
+<app-navegador [listapantalla]="false" [listaing]="true" [listaproyec]="false" [listaadminproyec]="false"></app-navegador>
+<div class="contenedorprinc" align="center">
+<h2>Detalle de Orden de trabajo</h2>
+<button (click)="goBack()" type="button" class="btn btn-danger">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        Volver
+      </button>
+<div *ngIf="todo">
+<h3>Numero: {{todo.num}}</h3>
+<h4>Ultima actualización: {{todo.updated_date | date}}</h4>
+<h3>Proyecto: {{todo.proyecto}}</h3>
+<p>Fecha solicitud: {{todo.fechasolicitud | date}}</p>
+<p>Fecha plazo: {{todo.fechaplazo | date }}</p>
+<p>Solicita: {{todo.ingeniero}}</p>
+<p>Categoria: {{todo.categoria}}</p>
+<p>Proyecta: {{todo.listaproyectista}}</p>
+<p>Estado: {{todo.listaestadoalter}}</p>
+<p>Asunto: {{todo.asunto}}</p>
+<p>Motivo: {{todo.motivo}}</p>
+<p>Referencia: {{todo.referencia}}</p>
+
+</div>
+</div>
