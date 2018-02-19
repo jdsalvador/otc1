@@ -6,7 +6,7 @@ import { ProyService } from '../proy.service';
 import { Book } from '../../pipes/tipoorden';
 import * as io from "socket.io-client";
 import {FormControl, FormGroup, FormArray } from '@angular/forms';
-import {IMyDpOptions} from '../../../../node_modules/angular4-datepicker/src/my-date-picker/interfaces/my-options.interface';
+//import {IMyDpOptions} from '../../../../node_modules/angular4-datepicker/src/my-date-picker/interfaces/my-options.interface';
 
 
 @Component({
